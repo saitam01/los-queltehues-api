@@ -5,6 +5,7 @@ import cl.queltehues.service.DocService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,7 @@ public class DocController {
             response = Map.class
     )
     @LoggingInfo
+    @PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
     public Map<String, Collection> getboletas() {
         return Collections.singletonMap("response", docService.getBoletas());
     }
