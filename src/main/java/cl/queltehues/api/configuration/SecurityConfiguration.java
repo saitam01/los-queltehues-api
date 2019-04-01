@@ -1,7 +1,8 @@
 package cl.queltehues.api.configuration;
 
-import cl.queltehues.api.security.*;
-import cl.queltehues.api.security.jwt.*;
+import cl.queltehues.api.security.AuthoritiesConstants;
+import cl.queltehues.api.security.jwt.JWTConfigurer;
+import cl.queltehues.api.security.jwt.TokenProvider;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -25,34 +26,34 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-            .antMatchers(HttpMethod.OPTIONS, "/**")
-            .antMatchers("/swagger-ui/index.html")
-            .antMatchers("/test/**");
+                .antMatchers(HttpMethod.OPTIONS, "/**")
+                .antMatchers("/swagger-ui/index.html")
+                .antMatchers("/test/**");
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-            .csrf()
-            .disable()
-            .exceptionHandling()
-            //.authenticationEntryPoint(problemSupport)
-            //.accessDeniedHandler(problemSupport)
-        .and()
-            .headers()
-            .frameOptions()
-            .disable()
-        .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-            .authorizeRequests()
-            .antMatchers("/api/**").authenticated()
-            .antMatchers("/health").permitAll()
-            .antMatchers("/info").permitAll()
-            .antMatchers("/private/**").hasAuthority(AuthoritiesConstants.ADMIN)
-        .and()
-            .apply(securityConfigurerAdapter());
+                .csrf()
+                .disable()
+                .exceptionHandling()
+                //.authenticationEntryPoint(problemSupport)
+                //.accessDeniedHandler(problemSupport)
+                .and()
+                .headers()
+                .frameOptions()
+                .disable()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api/**").authenticated()
+                .antMatchers("/health").permitAll()
+                .antMatchers("/info").permitAll()
+                .antMatchers("/private/**").hasAuthority(AuthoritiesConstants.ADMIN)
+                .and()
+                .apply(securityConfigurerAdapter());
     }
 
     private JWTConfigurer securityConfigurerAdapter() {

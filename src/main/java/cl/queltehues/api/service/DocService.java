@@ -45,9 +45,9 @@ public class DocService {
         } else {
             log.info("Files:");
             fileList.getFiles().stream()
-                .forEach(file ->
-                        log.info(String.format("%s (%s), %s\n", file.getName(), file.getId(), file.getMimeType()))
-                );
+                    .forEach(file ->
+                            log.info(String.format("%s (%s), %s\n", file.getName(), file.getId(), file.getMimeType()))
+                    );
         }
         return fileList.getFiles();
     }

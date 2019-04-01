@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DummyService {
 
-	@LoggingInfo
+    @LoggingInfo
     public String getDummyMessage() {
         return "Hello World";
     }

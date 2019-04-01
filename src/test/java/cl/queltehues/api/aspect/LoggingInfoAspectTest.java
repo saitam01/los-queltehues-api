@@ -19,13 +19,11 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class LoggingInfoAspectTest {
 
-    private LoggingInfoAspect aspect;
-
-    @Mock
-    private ProceedingJoinPoint proceedingJoinPoint;
-
     @Mock
     Logger logger;
+    private LoggingInfoAspect aspect;
+    @Mock
+    private ProceedingJoinPoint proceedingJoinPoint;
 
     @Before
     public void setUp() throws Throwable {

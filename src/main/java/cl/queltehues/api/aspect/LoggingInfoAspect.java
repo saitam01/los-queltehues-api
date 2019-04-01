@@ -13,9 +13,9 @@ import java.util.Arrays;
 @Component
 public class LoggingInfoAspect {
 
-    private static Logger logger = LogManager.getLogger(LoggingInfoAspect.class);
     private static final String IN = "Entrando";
     private static final String OUT = "Saliendo";
+    private static Logger logger = LogManager.getLogger(LoggingInfoAspect.class);
 
     /**
      * Método que logea la entrada y salida de un método.

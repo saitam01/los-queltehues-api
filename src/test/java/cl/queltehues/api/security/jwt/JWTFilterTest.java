@@ -30,8 +30,8 @@ public class JWTFilterTest {
         SecurityConfig jHipsterProperties = new SecurityConfig();
         tokenProvider = new TokenProvider(jHipsterProperties);
         ReflectionTestUtils.setField(tokenProvider, "key",
-            Keys.hmacShaKeyFor(Decoders.BASE64
-                .decode("OTM0NjE2M2Y0NjBlNGVlMGRlZjFhOGVlMDUxODcxMmMwNWMzYmU3YzdmNzNlMTZlMGRmODAwYWZkMzNiODZmZWQzNGIxM2Q3Y2Y5MTUxMmQwMzk3NWU5MTY4NWNjOTg0ZDdlNDIzOGEyYTYxYTYwZjViY2ZiZWMzMzk5YWJmYWI=")));
+                Keys.hmacShaKeyFor(Decoders.BASE64
+                        .decode("OTM0NjE2M2Y0NjBlNGVlMGRlZjFhOGVlMDUxODcxMmMwNWMzYmU3YzdmNzNlMTZlMGRmODAwYWZkMzNiODZmZWQzNGIxM2Q3Y2Y5MTUxMmQwMzk3NWU5MTY4NWNjOTg0ZDdlNDIzOGEyYTYxYTYwZjViY2ZiZWMzMzk5YWJmYWI=")));
 
         ReflectionTestUtils.setField(tokenProvider, "tokenValidityInMilliseconds", 300000);
         jwtFilter = new JWTFilter(tokenProvider);
@@ -41,9 +41,9 @@ public class JWTFilterTest {
     @Test
     public void testAdminJWTFilter() throws Exception {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-            "admin",
-            "admin",
-            Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN))
+                "admin",
+                "admin",
+                Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN))
         );
         String jwt = tokenProvider.createToken(authentication, false);
         System.out.println("ADMIN: " + jwt);
@@ -61,9 +61,9 @@ public class JWTFilterTest {
     @Test
     public void testUserJWTFilter() throws Exception {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-            "user",
-            "user",
-            Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.USER))
+                "user",
+                "user",
+                Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.USER))
         );
         String jwt = tokenProvider.createToken(authentication, false);
         System.out.println("USER: " + jwt);
@@ -117,9 +117,9 @@ public class JWTFilterTest {
     @Test
     public void testJWTFilterWrongScheme() throws Exception {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-            "test-user",
-            "test-password",
-            Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.USER))
+                "test-user",
+                "test-password",
+                Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.USER))
         );
         String jwt = tokenProvider.createToken(authentication, false);
         MockHttpServletRequest request = new MockHttpServletRequest();
