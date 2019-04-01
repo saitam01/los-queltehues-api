@@ -1,0 +1,33 @@
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
+    min-response-size: 1024
+  servlet:
+    context-path: /queltehues/api/v1
+
+info:
+  app:
+    name: Los Queltehues REST API
+    description: Servicio REST Para los queltehues web app
+    version: 1.0.0
+
+management:
+  endpoint:
+    health:
+      enabled: true
+    info:
+      enabled: true
+  endpoints:
+    web:
+      base-path: /
+
+security:
+  authentication:
+    jwt:
+      # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
+      base64-secret: OTM0NjE2M2Y0NjBlNGVlMGRlZjFhOGVlMDUxODcxMmMwNWMzYmU3YzdmNzNlMTZlMGRmODAwYWZkMzNiODZmZWQzNGIxM2Q3Y2Y5MTUxMmQwMzk3NWU5MTY4NWNjOTg0ZDdlNDIzOGEyYTYxYTYwZjViY2ZiZWMzMzk5YWJmYWI=
+      # Token is valid 24 hours
+      token-validity-in-seconds: 86400
+      token-validity-in-seconds-for-remember-me: 2592000
