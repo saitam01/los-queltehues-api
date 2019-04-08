@@ -19,9 +19,9 @@ import java.util.List;
 public class DocService {
 
     @LoggingInfo
-    public Collection<File> getBoletas() {
+    public Collection<File> getFolder(String folderName) {
         try {
-            return connectDrive();
+            return connectDrive(folderName);
         } catch (IOException e) {
             e.printStackTrace();
             return Collections.emptyList();
@@ -31,24 +31,33 @@ public class DocService {
         }
     }
 
-    private List<File> connectDrive() throws IOException, GeneralSecurityException {
+    private List<File> connectDrive(String folderName) throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
         Drive service = DriveConnection.connectDrive();
         // Print the names and IDs for up to 10 files.
-        FileList fileList = service.files().list()
-                .setPageSize(10)
+        FileList folderList = service.files().list()
+                //.setPageSize(10)
+                .setQ("mimeType='application/vnd.google-apps.folder'")
+                .setQ(String.format("name='%s'", folderName))
                 .setFields("nextPageToken, files(id, name, mimeType)")
                 .execute();
-
-        if (ObjectUtils.isEmpty(fileList.getFiles())) {
-            log.info("No files found.");
+        FileList fileList;
+        if (ObjectUtils.isEmpty(folderList.getFiles())) {
+            log.info("No folder found.");
+            return Collections.emptyList();
         } else {
-            log.info("Files:");
+            List<File> folders = folderList.getFiles();
+            fileList = service.files().list()
+                .setQ(String.format("'%s' in parents", folders.get(0).getId()))
+                .execute();
+            if(fileList.isEmpty()) {
+                log.info("No files found.");
+                return Collections.emptyList();
+            }
             fileList.getFiles().stream()
-                    .forEach(file ->
-                            log.info(String.format("%s (%s), %s\n", file.getName(), file.getId(), file.getMimeType()))
-                    );
+                .forEach(file ->
+                    log.info(String.format("%s (%s), %s\n", file.getName(), file.getId(), file.getMimeType())));
+            return fileList.getFiles();
         }
-        return fileList.getFiles();
     }
 }

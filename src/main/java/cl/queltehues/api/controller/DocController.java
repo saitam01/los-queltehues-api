@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
@@ -22,7 +23,7 @@ public class DocController {
     public DocController() {
     }
 
-    @GetMapping(value = "/docs/boletas",
+    @GetMapping(value = "/docs/{folderName}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(
             value = "Endpoint de documentos",
@@ -31,7 +32,7 @@ public class DocController {
     )
     @LoggingInfo
     @PreAuthorize("hasRole('ROLE_USER')")
-    public Map<String, Collection> getboletas() {
-        return Collections.singletonMap("response", docService.getBoletas());
+    public Map<String, Collection> getBoletas(@PathVariable(value = "folderName") String folderName) {
+        return Collections.singletonMap("response", docService.getFolder(folderName));
     }
 }
