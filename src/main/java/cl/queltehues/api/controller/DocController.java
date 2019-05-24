@@ -16,11 +16,12 @@ import java.util.Map;
 
 @RestController
 public class DocController {
-
-    @Autowired
     private DocService docService;
 
-    public DocController() {}
+    @Autowired
+    public DocController(DocService docService) {
+        this.docService = docService;
+    }
 
     @GetMapping(value = "/docs/{folderName}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

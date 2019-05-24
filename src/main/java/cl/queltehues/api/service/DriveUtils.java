@@ -6,10 +6,17 @@ import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -22,7 +29,7 @@ public class DriveUtils {
         this.drive = driveService.connectDrive();
     }
 
-    public String getFolderIdByName(String folderName) throws DriveException {
+    String getFolderIdByName(String folderName) throws DriveException {
         try {
             FileList folderList = drive.files().list()
                     .setQ("mimeType='application/vnd.google-apps.folder'")
@@ -53,21 +60,31 @@ public class DriveUtils {
         }
     }
 
-    public File getFile(File file) throws DriveException {
+    List<User> getUsers(File file) throws DriveException {
         try {
+
+            List<User> userList = new ArrayList<>();
             InputStream in = drive.files().get(file.getId()).executeMediaAsInputStream();
             InputStreamReader isr = new InputStreamReader(in);
             BufferedReader br = new BufferedReader(isr);
             String line;
 
-            StringBuilder responseData = new StringBuilder();
             while((line = br.readLine()) != null) {
-                responseData.append(line);
+                String[] userPass = line.split(":");
+
+                Collection<? extends GrantedAuthority> authorities =
+                        Arrays.stream(new String [] {"ROLE_USER"})
+                                .map(SimpleGrantedAuthority::new)
+                                .collect(Collectors.toList());
+
+                User user = new User(userPass[0], userPass[1], authorities);
+                userList.add(user);
+                log.info(String.format("user: %s, password: %s", user.getUsername(), user.getPassword()));
             }
-            log.info(responseData.toString());
-            return null;
+            return userList;
         } catch (IOException e) {
-            throw new DriveException(e.getMessage());
+            log.error(e.getMessage());
+            throw new DriveException("Error on retrieve the users");
         }
     }
 

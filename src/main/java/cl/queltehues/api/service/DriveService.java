@@ -12,13 +12,10 @@ import java.security.GeneralSecurityException;
 @Slf4j
 public class DriveService {
 
-    public Drive connectDrive() throws DriveException {
+    Drive connectDrive() throws DriveException {
         try {
             return DriveConnection.connectDrive();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-            throw new DriveException("Drive connection fail.");
-        } catch (GeneralSecurityException e) {
+        } catch (IOException | GeneralSecurityException e) {
             log.error(e.getMessage());
             throw new DriveException("Drive connection fail.");
         }

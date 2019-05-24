@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * Utility class for Spring Security.
  */
-public final class SecurityUtils {
+final class SecurityUtils {
 
     private SecurityUtils() {
     }
@@ -19,7 +19,7 @@ public final class SecurityUtils {
      *
      * @return the login of the current user
      */
-    public static Optional<String> getCurrentUserLogin() {
+    static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(securityContext.getAuthentication())
                 .map(authentication -> {
@@ -38,7 +38,7 @@ public final class SecurityUtils {
      *
      * @return the JWT of the current user
      */
-    public static Optional<String> getCurrentUserJWT() {
+    static Optional<String> getCurrentUserJWT() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(securityContext.getAuthentication())
                 .filter(authentication -> authentication.getCredentials() instanceof String)
@@ -50,7 +50,7 @@ public final class SecurityUtils {
      *
      * @return true if the user is authenticated, false otherwise
      */
-    public static boolean isAuthenticated() {
+    static boolean isAuthenticated() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(securityContext.getAuthentication())
                 .map(authentication -> authentication.getAuthorities().stream()
@@ -66,7 +66,7 @@ public final class SecurityUtils {
      * @param authority the authority to check
      * @return true if the current user has the authority, false otherwise
      */
-    public static boolean isCurrentUserInRole(String authority) {
+    static boolean isCurrentUserInRole(String authority) {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(securityContext.getAuthentication())
                 .map(authentication -> authentication.getAuthorities().stream()

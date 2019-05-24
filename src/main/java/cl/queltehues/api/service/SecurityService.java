@@ -2,34 +2,38 @@ package cl.queltehues.api.service;
 
 import cl.queltehues.api.exception.DriveException;
 import cl.queltehues.api.security.jwt.TokenProvider;
-import com.google.api.services.drive.model.File;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Service
+@Slf4j
 public class SecurityService {
 
-    @Autowired
     private TokenProvider tokenProvider;
+    private UserProvider userProvider;
+
     @Autowired
-    private DriveUtils driveUtils;
+    public SecurityService(TokenProvider tokenProvider, UserProvider userProvider) {
+        this.tokenProvider = tokenProvider;
+        this.userProvider = userProvider;
+    }
 
     public Collection<Object> validate(String token) throws DriveException {
         User user = tokenProvider.getUser(token);
-        String folderId = driveUtils.getFolderIdByName("vecinos");
-        List<File> credenciales = driveUtils.getFilesFromFolder(folderId);
-        credenciales.forEach(credencial -> {
-            try {
-                File file = driveUtils.getFile(credencial);
-            } catch (DriveException e) {
-                e.printStackTrace();
-            }
-        });
-        return Arrays.asList(user);
+        List userList = userProvider.getUsers();
+        if(userList.contains(user)){
+            log.info("USER Exist!");
+            return Collections.singletonList("OK");
+        } else {
+            log.info("USER NOT Exist!");
+            return Collections.singletonList("User not exist");
+        }
+
     }
 }

@@ -68,7 +68,7 @@ public class TokenProvider {
                 .compact();
     }
 
-    public Authentication getAuthentication(String token) {
+    Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(key)
                 .parseClaimsJws(token)
@@ -94,14 +94,11 @@ public class TokenProvider {
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-
-        User user = new User(claims.get("username", String.class),
+        return new User(claims.get("username", String.class),
                 claims.get("password", String.class), authorities);
-
-        return user;
     }
 
-    public boolean validateToken(String authToken) {
+    boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(key).parseClaimsJws(authToken);
             return true;

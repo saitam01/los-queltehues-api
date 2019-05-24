@@ -16,10 +16,12 @@ import java.util.Map;
 @RestController
 public class SecurityController {
 
-    @Autowired
     private SecurityService securityService;
 
-    public SecurityController() {}
+    @Autowired
+    public SecurityController(SecurityService securityService) {
+        this.securityService = securityService;
+    }
 
     @GetMapping(value = "/auth",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -28,8 +30,7 @@ public class SecurityController {
             notes = "Validate user and password",
             response = Map.class
     )
-    public Map<String, Collection> get(@RequestParam(value = "jwt") String token)
-            throws DriveException {
+    public Map<String, Collection> get(@RequestParam(value = "jwt") String token) throws DriveException {
         return Collections.singletonMap("response", securityService.validate(token));
     }
 }

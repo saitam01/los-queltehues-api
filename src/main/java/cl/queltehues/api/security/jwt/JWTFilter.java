@@ -18,11 +18,11 @@ import java.io.IOException;
  */
 public class JWTFilter extends GenericFilterBean {
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+    static final String AUTHORIZATION_HEADER = "Authorization";
 
     private TokenProvider tokenProvider;
 
-    public JWTFilter(TokenProvider tokenProvider) {
+    JWTFilter(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
 
