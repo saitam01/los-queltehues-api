@@ -1,6 +1,5 @@
 package cl.queltehues.api.controller;
 
-import cl.queltehues.api.aspect.LoggingInfo;
 import cl.queltehues.api.service.DummyService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ public class DummyController {
             notes = "Devuelve un JSON con 'Hello World' como respuesta",
             response = Map.class
     )
-    @LoggingInfo
     public Map<String, String> getHelloWorld() {
         return Collections.singletonMap("response", dummyService.getDummyMessage());
     }

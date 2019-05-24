@@ -25,7 +25,7 @@ public class DriveConnection {
     private static final String APPLICATION_NAME = "Google Drive Los Queltehues";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
-    private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_METADATA_READONLY);
+    private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE);
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
     public static Drive connectDrive() throws IOException, GeneralSecurityException {

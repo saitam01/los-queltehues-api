@@ -1,13 +1,12 @@
 package cl.queltehues.api.controller;
 
 import cl.queltehues.api.exception.DriveException;
-import cl.queltehues.api.service.DocService;
+import cl.queltehues.api.service.SecurityService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
@@ -15,23 +14,22 @@ import java.util.Collections;
 import java.util.Map;
 
 @RestController
-public class DocController {
+public class SecurityController {
 
     @Autowired
-    private DocService docService;
+    private SecurityService securityService;
 
-    public DocController() {}
+    public SecurityController() {}
 
-    @GetMapping(value = "/docs/{folderName}",
+    @GetMapping(value = "/auth",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(
-            value = "Documents endpoint",
-            notes = "Return a list of documents",
+            value = "Security endpoint",
+            notes = "Validate user and password",
             response = Map.class
     )
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public Map<String, Collection> get(@PathVariable(value = "folderName") String folderName)
+    public Map<String, Collection> get(@RequestParam(value = "jwt") String token)
             throws DriveException {
-        return Collections.singletonMap("response", docService.getFiles(folderName));
+        return Collections.singletonMap("response", securityService.validate(token));
     }
 }

@@ -33,7 +33,7 @@ public class JWTFilterTest {
                 Keys.hmacShaKeyFor(Decoders.BASE64
                         .decode("OTM0NjE2M2Y0NjBlNGVlMGRlZjFhOGVlMDUxODcxMmMwNWMzYmU3YzdmNzNlMTZlMGRmODAwYWZkMzNiODZmZWQzNGIxM2Q3Y2Y5MTUxMmQwMzk3NWU5MTY4NWNjOTg0ZDdlNDIzOGEyYTYxYTYwZjViY2ZiZWMzMzk5YWJmYWI=")));
 
-        ReflectionTestUtils.setField(tokenProvider, "tokenValidityInMilliseconds", 300000);
+        ReflectionTestUtils.setField(tokenProvider, "tokenValidityInMilliseconds", 3600000);
         jwtFilter = new JWTFilter(tokenProvider);
         SecurityContextHolder.getContext().setAuthentication(null);
     }
