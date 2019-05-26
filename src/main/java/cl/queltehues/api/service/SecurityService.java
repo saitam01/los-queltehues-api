@@ -24,7 +24,7 @@ public class SecurityService {
         this.userProvider = userProvider;
     }
 
-    public Collection<Object> validate(String token) throws DriveException {
+    public Collection<Object> validateUser(String token) throws DriveException {
         User user = tokenProvider.getUser(token);
         List userList = userProvider.getUsers();
         if(userList.contains(user)){
@@ -34,6 +34,5 @@ public class SecurityService {
             log.info("USER NOT Exist!");
             return Collections.singletonList("User not exist");
         }
-
     }
 }

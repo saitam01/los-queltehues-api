@@ -71,5 +71,6 @@ dependencies {
 
 bootRun {
     // Use Spring Boot DevTool only when we run Gradle bootRun task
-    classpath = sourceSets.main.runtimeClasspath + configurations.dev
+    classpath = sourceSets.main.runtimeClasspath
+    // + configurations.dev
 }

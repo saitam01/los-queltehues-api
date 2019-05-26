@@ -29,9 +29,9 @@ public class UserProvider {
         if(credentials.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
-        List<File> collect = credentials.stream()
+        List<File> filterFiles = credentials.stream()
                 .filter(credential -> "text/plain".equalsIgnoreCase(credential.getMimeType()))
                 .collect(Collectors.toList());
-        return driveUtils.getUsers(collect.get(0));
+        return driveUtils.getUsers(filterFiles.get(0));
     }
 }

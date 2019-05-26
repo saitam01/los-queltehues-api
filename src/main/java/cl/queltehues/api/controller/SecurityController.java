@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 @RestController
@@ -30,7 +29,7 @@ public class SecurityController {
             notes = "Validate user and password",
             response = Map.class
     )
-    public Map<String, Collection> get(@RequestParam(value = "jwt") String token) throws DriveException {
-        return Collections.singletonMap("response", securityService.validate(token));
+    public Collection authenticateUser(@RequestParam(value = "jwt") String token) throws DriveException {
+        return securityService.validateUser(token);
     }
 }

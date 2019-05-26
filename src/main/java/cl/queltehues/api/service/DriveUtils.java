@@ -79,7 +79,7 @@ public class DriveUtils {
 
                 User user = new User(userPass[0], userPass[1], authorities);
                 userList.add(user);
-                log.info(String.format("user: %s, password: %s", user.getUsername(), user.getPassword()));
+                //log.info(String.format("user: %s, password: %s", user.getUsername(), user.getPassword()));
             }
             return userList;
         } catch (IOException e) {
@@ -87,5 +87,4 @@ public class DriveUtils {
             throw new DriveException("Error on retrieve the users");
         }
     }
-
 }
