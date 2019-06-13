@@ -1,6 +1,7 @@
 package cl.queltehues.api.security.jwt;
 
 import cl.queltehues.api.configuration.SecurityConfig;
+import cl.queltehues.api.security.AuthoritiesConstants;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -96,6 +97,12 @@ public class TokenProvider {
                         .collect(Collectors.toList());
         return new User(claims.get("username", String.class),
                 claims.get("password", String.class), authorities);
+    }
+
+    public User getUser(String username, String password) {
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.asList(new SimpleGrantedAuthority(AuthoritiesConstants.USER));
+        return new User(username, password, authorities);
     }
 
     boolean validateToken(String authToken) {
