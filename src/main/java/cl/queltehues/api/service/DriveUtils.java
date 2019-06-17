@@ -4,6 +4,8 @@ import cl.queltehues.api.exception.DriveException;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.model.ValueRange;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,10 +25,12 @@ import java.util.stream.Collectors;
 public class DriveUtils {
 
     private Drive drive;
+    private Sheets sheets;
 
     @Autowired
     public DriveUtils(DriveService driveService) throws DriveException {
         this.drive = driveService.connectDrive();
+        this.sheets = driveService.connectSheets();
     }
 
     String getFolderIdByName(String folderName) throws DriveException {
@@ -60,7 +64,39 @@ public class DriveUtils {
         }
     }
 
+    /**
+     * Get Users from spreadsheet
+     * @param file
+     * @return List of users
+     * @throws DriveException
+     */
     List<User> getUsers(File file) throws DriveException {
+        try {
+
+            final String range = "A:C";
+            List<User> userList = new ArrayList<>();
+            ValueRange response = sheets.spreadsheets().values().get(file.getId(), range).execute();
+
+            List<List<Object>> values = response.getValues();
+            if (values == null || values.isEmpty()) {
+                log.error("No data in spreadsheet.");
+            } else {
+                for (List row : values) {
+                    Collection<? extends GrantedAuthority> authorities =
+                        Arrays.stream(new String [] {"ROLE_USER"}).map(SimpleGrantedAuthority::new)
+                                .collect(Collectors.toList());
+                    User user = new User(row.get(1).toString(), row.get(2).toString(), authorities);
+                    userList.add(user);
+                }
+            }
+            return userList;
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new DriveException("Error on retrieve the users");
+        }
+    }
+
+    /*List<User> getUsers(File file) throws DriveException {
         try {
 
             List<User> userList = new ArrayList<>();
@@ -86,5 +122,5 @@ public class DriveUtils {
             log.error(e.getMessage());
             throw new DriveException("Error on retrieve the users");
         }
-    }
+    }*/
 }

@@ -30,7 +30,8 @@ public class UserProvider {
             return Collections.EMPTY_LIST;
         }
         List<File> filterFiles = credentials.stream()
-                .filter(credential -> "text/plain".equalsIgnoreCase(credential.getMimeType()))
+                .filter(credential -> "application/vnd.google-apps.spreadsheet"
+                        .equalsIgnoreCase(credential.getMimeType()))
                 .collect(Collectors.toList());
         return driveUtils.getUsers(filterFiles.get(0));
     }
