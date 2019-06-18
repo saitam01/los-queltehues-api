@@ -4,6 +4,7 @@ import cl.queltehues.api.exception.DriveException;
 import cl.queltehues.api.security.jwt.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,7 +45,8 @@ public class SecurityService {
             }
             return tokenProvider.createToken(authentication, rememberMe.isPresent());
         } else {
-            return "authorization-refuse";
+            log.info("Authorization refuse");
+            throw new AuthorizationServiceException("Autorizacion denegada.");
         }
 
     }

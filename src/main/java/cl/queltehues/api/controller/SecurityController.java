@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class SecurityController {
@@ -44,7 +41,10 @@ public class SecurityController {
     )
     @CrossOrigin(origins = "http://localhost:4200")
     public Map<String, String> authorize(@RequestBody Vecino vecino) throws DriveException {
-        return Collections.singletonMap("token", securityService.authorize(vecino.getUsername(), vecino.getPassword(),
+        Map<String, String> response = new HashMap<>();
+        response.put("token", securityService.authorize(vecino.getUsername(), vecino.getPassword(),
                 Optional.ofNullable(vecino.getRememberMe())));
+        response.put("username", vecino.getUsername());
+        return response;
     }
 }
