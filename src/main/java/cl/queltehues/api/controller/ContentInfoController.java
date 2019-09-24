@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,7 @@ public class ContentInfoController {
             response = Map.class
     )
     @PreAuthorize("hasRole('ROLE_USER')")
+    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://localhost:4200"})
     public Map<String, Collection> getCommonExpenses(@PathVariable(value = "house") String houseNumber)
             throws DriveException {
         return Collections.singletonMap("response", contentService.getCommonExpenses(houseNumber));
@@ -45,6 +47,7 @@ public class ContentInfoController {
             response = Map.class
     )
     @PreAuthorize("hasRole('ROLE_USER')")
+    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://localhost:4200"})
     public Map<String, Collection> getNews() throws DriveException {
         return Collections.singletonMap("response", contentService.getNews());
     }
@@ -57,6 +60,7 @@ public class ContentInfoController {
             response = Map.class
     )
     @PreAuthorize("hasRole('ROLE_USER')")
+    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://localhost:4200"})
     public Map<String, Collection> getDoorKeeper() throws DriveException {
         return Collections.singletonMap("response", contentService.getDoorKeeper());
     }
@@ -69,6 +73,7 @@ public class ContentInfoController {
             response = Map.class
     )
     @PreAuthorize("hasRole('ROLE_USER')")
+    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://localhost:4200"})
     public Map<String, Collection> getComite() throws DriveException {
         return Collections.singletonMap("response", contentService.getComite());
     }
