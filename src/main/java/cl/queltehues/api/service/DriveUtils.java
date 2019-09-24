@@ -1,5 +1,9 @@
 package cl.queltehues.api.service;
 
+import cl.queltehues.api.domain.Comite;
+import cl.queltehues.api.domain.CommonExpense;
+import cl.queltehues.api.domain.DoorKeeper;
+import cl.queltehues.api.domain.News;
 import cl.queltehues.api.exception.DriveException;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
@@ -14,10 +18,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -49,7 +50,7 @@ public class DriveUtils {
         }
     }
 
-    public List<File> getFilesFromFolder(String id) throws DriveException {
+    List<File> getFilesFromFolder(String id) throws DriveException {
         try {
             FileList folderList = drive.files().list()
                     .setQ(String.format("'%s' in parents", id))
@@ -66,11 +67,11 @@ public class DriveUtils {
 
     /**
      * Get Users from spreadsheet
-     * @param file
-     * @return List of users
-     * @throws DriveException
      */
-    List<User> getUsers(File file) throws DriveException {
+    List getUsers(File file) throws DriveException {
+        if(file == null) {
+            return Collections.EMPTY_LIST;
+        }
         try {
 
             final String range = "A:C";
@@ -96,31 +97,110 @@ public class DriveUtils {
         }
     }
 
-    /*List<User> getUsers(File file) throws DriveException {
+    List getCommonExpenses(File infoCondominio, String houseNumber) throws DriveException {
+        if(infoCondominio == null) {
+            return Collections.EMPTY_LIST;
+        }
         try {
 
-            List<User> userList = new ArrayList<>();
-            InputStream in = drive.files().get(file.getId()).executeMediaAsInputStream();
-            InputStreamReader isr = new InputStreamReader(in);
-            BufferedReader br = new BufferedReader(isr);
-            String line;
+            final String range = "gc!A:H";
+            List<CommonExpense> commonExpenses = new ArrayList<>();
+            ValueRange response = sheets.spreadsheets().values().get(infoCondominio.getId(), range).execute();
 
-            while((line = br.readLine()) != null) {
-                String[] userPass = line.split(":");
-
-                Collection<? extends GrantedAuthority> authorities =
-                        Arrays.stream(new String [] {"ROLE_USER"})
-                                .map(SimpleGrantedAuthority::new)
-                                .collect(Collectors.toList());
-
-                User user = new User(userPass[0], userPass[1], authorities);
-                userList.add(user);
-                //log.info(String.format("user: %s, password: %s", user.getUsername(), user.getPassword()));
+            List<List<Object>> values = response.getValues();
+            if (values == null || values.isEmpty()) {
+                log.error("No data in spreadsheet.");
+            } else {
+                for (List row : values) {
+                    if(houseNumber.equalsIgnoreCase(row.get(0).toString())) {
+                        String [] expenses = { row.get(1).toString(), row.get(2).toString(), row.get(3).toString(),
+                                row.get(4).toString(), row.get(5).toString(), row.get(6).toString()};
+                        CommonExpense commonExpense = new CommonExpense(row.get(0).toString(), expenses, row.get(7).toString());
+                        commonExpenses.add(commonExpense);
+                        break;
+                    }
+                }
             }
-            return userList;
+            return commonExpenses;
         } catch (IOException e) {
             log.error(e.getMessage());
-            throw new DriveException("Error on retrieve the users");
+            throw new DriveException("Error on retrieve the common expenses.");
         }
-    }*/
+    }
+
+    List getDoorKeeper(File dkFiles) throws DriveException {
+        if(dkFiles == null) {
+            return Collections.EMPTY_LIST;
+        }
+        try {
+            final String range = "conserjes!A:D";
+            List<DoorKeeper> doorKeepers = new ArrayList<>();
+            ValueRange response = sheets.spreadsheets().values().get(dkFiles.getId(), range).execute();
+
+            List<List<Object>> values = response.getValues();
+            if (values == null || values.isEmpty()) {
+                log.error("No data in spreadsheet.");
+                return Collections.EMPTY_LIST;
+            } else {
+                for (List row : values) {
+                    doorKeepers.add(new DoorKeeper(row.get(0).toString(), row.get(1).toString(),
+                            row.get(2).toString(), row.get(3).toString()));
+                }
+            }
+            return doorKeepers;
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new DriveException("Error on retrieve the common expenses.");
+        }
+    }
+
+    List getNews(File newsFile) throws DriveException {
+        if(newsFile == null) {
+            return Collections.EMPTY_LIST;
+        }
+        try {
+            final String range = "news!A:D";
+            List<News> news = new ArrayList<>();
+            ValueRange response = sheets.spreadsheets().values().get(newsFile.getId(), range).execute();
+
+            List<List<Object>> values = response.getValues();
+            if (values == null || values.isEmpty()) {
+                log.error("No data in spreadsheet.");
+                return Collections.EMPTY_LIST;
+            } else {
+                for (List row : values) {
+                    news.add(new News(row.get(0).toString(), row.get(1).toString(), row.get(2).toString()));
+                }
+            }
+            return news;
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new DriveException("Error on retrieve the common expenses.");
+        }
+    }
+
+    List getComite(File comiteFile) throws DriveException {
+        if(comiteFile == null) {
+            return Collections.EMPTY_LIST;
+        }
+        try {
+            final String range = "comite!A:C";
+            List<Comite> comiteList = new ArrayList<>();
+            ValueRange response = sheets.spreadsheets().values().get(comiteFile.getId(), range).execute();
+
+            List<List<Object>> values = response.getValues();
+            if (values == null || values.isEmpty()) {
+                log.error("No data in spreadsheet.");
+                return Collections.EMPTY_LIST;
+            } else {
+                for (List row : values) {
+                    comiteList.add(new Comite(row.get(0).toString(), row.get(1).toString(), row.get(2).toString()));
+                }
+            }
+            return comiteList;
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new DriveException("Error on retrieve the common expenses.");
+        }
+    }
 }

@@ -11,9 +11,8 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Vecino implements Serializable {
-
-    private String username;
-    private String password;
-    private Boolean rememberMe;
+public class CommonExpense implements Serializable {
+    private String house;
+    private String [] gc;
+    private String difference;
 }

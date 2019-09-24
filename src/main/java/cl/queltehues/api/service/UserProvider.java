@@ -16,6 +16,7 @@ public class UserProvider {
 
     private DriveUtils driveUtils;
     private static final String FOLDER_NAME = "vecinos";
+    private static final String CREDENTIALS = "credenciales-vecinos";
 
     @Autowired
     public UserProvider(DriveUtils driveUtils) {
@@ -33,6 +34,10 @@ public class UserProvider {
                 .filter(credential -> "application/vnd.google-apps.spreadsheet"
                         .equalsIgnoreCase(credential.getMimeType()))
                 .collect(Collectors.toList());
-        return driveUtils.getUsers(filterFiles.get(0));
+        return driveUtils.getUsers(
+                filterFiles.stream().filter(f ->
+                        f.getName().equalsIgnoreCase(CREDENTIALS))
+                        .findAny().orElse(null)
+        );
     }
 }

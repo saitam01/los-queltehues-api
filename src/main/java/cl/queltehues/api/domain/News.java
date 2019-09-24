@@ -11,9 +11,10 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Vecino implements Serializable {
+public class News implements Serializable {
 
-    private String username;
-    private String password;
-    private Boolean rememberMe;
+    private String title;
+    private String description;
+    private String date;
+
 }

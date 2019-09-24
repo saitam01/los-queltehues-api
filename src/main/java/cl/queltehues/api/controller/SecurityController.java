@@ -20,18 +20,6 @@ public class SecurityController {
         this.securityService = securityService;
     }
 
-    @GetMapping(value = "/auth",
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(
-            value = "Security endpoint",
-            notes = "Validate user and password",
-            response = Map.class
-    )
-    @CrossOrigin(origins = "https://los-queltehues-web.herokuapp.com")
-    public Collection authorizeUser(@RequestParam(value = "jwt") String token) throws DriveException {
-        return securityService.validateUser(token);
-    }
-
     @PostMapping(value = "/token",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(
@@ -39,12 +27,11 @@ public class SecurityController {
             notes = "retrieve a jwt token with user and password",
             response = String.class
     )
-    @CrossOrigin(origins = "https://los-queltehues-web.herokuapp.com")
+    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://localhost:4200"})
     public Map<String, String> authorize(@RequestBody Vecino vecino) throws DriveException {
         Map<String, String> response = new HashMap<>();
         response.put("token", securityService.authorize(vecino.getUsername(), vecino.getPassword(),
                 Optional.ofNullable(vecino.getRememberMe())));
-        response.put("username", vecino.getUsername());
         return response;
     }
 }

@@ -8,13 +8,13 @@ import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -29,19 +29,23 @@ public class SecurityService {
         this.userProvider = userProvider;
     }
 
-    public Collection validateUser(String token) throws DriveException {
-        User user = tokenProvider.getUser(token);
+    /*public Collection validateUser() throws DriveException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = tokenProvider.getUser(authentication.getName());
         return validate(user) ? Collections.singletonList("OK") : Collections.singletonList("User not exist.");
-    }
+    }*/
 
     public String authorize(String user, String password, Optional<Boolean> rememberMe) throws DriveException {
         Authentication authentication;
 
         if(validate(tokenProvider.getUser(user, password))) {
+            Collection<? extends GrantedAuthority> authorities =
+                    Arrays.stream(new String [] {"ROLE_USER"}).map(SimpleGrantedAuthority::new)
+                            .collect(Collectors.toList());
             if (rememberMe.isPresent()) {
-                authentication = new RememberMeAuthenticationToken(user, password, null);
+                authentication = new RememberMeAuthenticationToken(user, password, authorities);
             } else {
-                authentication = new UsernamePasswordAuthenticationToken(user, password);
+                authentication = new UsernamePasswordAuthenticationToken(user, password, authorities);
             }
             return tokenProvider.createToken(authentication, rememberMe.isPresent());
         } else {
@@ -53,7 +57,7 @@ public class SecurityService {
 
     private Boolean validate(User user) throws DriveException {
         List userList = userProvider.getUsers();
-        if(userList.contains(user)){
+        if(!userList.isEmpty() && userList.contains(user)){
             log.info(String.format("User %s exist.", user.getUsername()));
             return true;
         } else {
