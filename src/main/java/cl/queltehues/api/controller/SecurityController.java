@@ -27,7 +27,8 @@ public class SecurityController {
             notes = "retrieve a jwt token with user and password",
             response = String.class
     )
-    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://localhost:4200"})
+    //@CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://www.los-queltehues.cl"})
     public Map<String, String> authorize(@RequestBody Vecino vecino) throws DriveException {
         Map<String, String> response = new HashMap<>();
         response.put("token", securityService.authorize(vecino.getUsername(), vecino.getPassword(),

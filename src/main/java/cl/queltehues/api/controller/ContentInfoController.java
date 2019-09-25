@@ -33,7 +33,8 @@ public class ContentInfoController {
             response = Map.class
     )
     @PreAuthorize("hasRole('ROLE_USER')")
-    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://localhost:4200"})
+    //@CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://www.los-queltehues.cl"})
     public Map<String, Collection> getCommonExpenses(@PathVariable(value = "house") String houseNumber)
             throws DriveException {
         return Collections.singletonMap("response", contentService.getCommonExpenses(houseNumber));
@@ -47,7 +48,8 @@ public class ContentInfoController {
             response = Map.class
     )
     @PreAuthorize("hasRole('ROLE_USER')")
-    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://localhost:4200"})
+    //@CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://www.los-queltehues.cl"})
     public Map<String, Collection> getNews() throws DriveException {
         return Collections.singletonMap("response", contentService.getNews());
     }
@@ -60,7 +62,8 @@ public class ContentInfoController {
             response = Map.class
     )
     @PreAuthorize("hasRole('ROLE_USER')")
-    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://localhost:4200"})
+    //@CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://www.los-queltehues.cl"})
     public Map<String, Collection> getDoorKeeper() throws DriveException {
         return Collections.singletonMap("response", contentService.getDoorKeeper());
     }
@@ -73,7 +76,8 @@ public class ContentInfoController {
             response = Map.class
     )
     @PreAuthorize("hasRole('ROLE_USER')")
-    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://localhost:4200"})
+    //@CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = {"https://los-queltehues-web.herokuapp.com", "http://www.los-queltehues.cl"})
     public Map<String, Collection> getComite() throws DriveException {
         return Collections.singletonMap("response", contentService.getComite());
     }
