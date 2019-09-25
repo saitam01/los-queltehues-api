@@ -56,8 +56,15 @@ public class SecurityService {
     }
 
     private Boolean validate(User user) throws DriveException {
-        List userList = userProvider.getUsers();
-        if(!userList.isEmpty() && userList.contains(user)){
+        List<User> userList = userProvider.getUsers();
+        if (userList.isEmpty()) {
+            log.info(String.format("Not users exist."));
+            return false;
+        }
+        if (userList.stream()
+                .filter(u -> u.getUsername().equalsIgnoreCase(user.getUsername()) &&
+                        u.getPassword().equalsIgnoreCase(user.getPassword()))
+                .findAny().isPresent()) {
             log.info(String.format("User %s exist.", user.getUsername()));
             return true;
         } else {
